@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "joba-static",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["--yes", "serve", "src", "-l", "4321"],
+      "port": 4321
+    }
+  ]
+}
