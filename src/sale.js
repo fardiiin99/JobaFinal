@@ -14,7 +14,7 @@ if (saleProducts.length) {
     <div class="cart-empty">
       <h2>No sale items right now</h2>
       <p>Check back soon — discounted weaves rotate as new stock comes in.</p>
-      <a href="new-arrivals.html" class="btn btn-primary">Shop New Arrivals</a>
+      <a href="new-arrivals" class="btn btn-primary">Shop New Arrivals</a>
     </div>`;
 }
 

@@ -201,7 +201,7 @@ function productCard(p, i, mode) {
        <p class="p-sold">${p.sold}</p>`
     : '';
 
-  const href = `product.html?id=${p.id}`;
+  const href = `product?id=${p.id}`;
   return `
   <article class="product" data-id="${p.id}">
     <div class="p-media">

@@ -10,14 +10,14 @@ const detail = productDetails[pid] || {};
 
 function renderNotFound() {
   document.getElementById('pdpCrumb').innerHTML =
-    `<a href="index.html">Home</a><span>/</span><span>Product</span>`;
+    `<a href="/">Home</a><span>/</span><span>Product</span>`;
   const pdp = document.getElementById('pdp');
   pdp.classList.add('pdp-empty');
   pdp.innerHTML = `
     <div class="cart-empty">
       <h2>Product not found</h2>
       <p>That piece isn’t in the catalogue — browse everything we carry instead.</p>
-      <a href="new-arrivals.html" class="btn btn-primary">Shop New Arrivals</a>
+      <a href="new-arrivals" class="btn btn-primary">Shop New Arrivals</a>
     </div>`;
 }
 
@@ -29,8 +29,8 @@ function renderProduct() {
   const off = p.old ? Math.round((1 - p.price / p.old) * 100) : 0;
 
   document.getElementById('pdpCrumb').innerHTML = `
-    <a href="index.html">Home</a><span>/</span>
-    <a href="category.html?c=${p.catSlug}">${p.cat}</a><span>/</span>
+    <a href="/">Home</a><span>/</span>
+    <a href="category?c=${p.catSlug}">${p.cat}</a><span>/</span>
     <span>${p.name}</span>`;
 
   document.getElementById('pdp').innerHTML = `
@@ -50,7 +50,7 @@ function renderProduct() {
     </div>
 
     <div class="pdp-info">
-      <p class="pdp-cat"><a href="category.html?c=${p.catSlug}">${p.cat}</a></p>
+      <p class="pdp-cat"><a href="category?c=${p.catSlug}">${p.cat}</a></p>
       <h1 class="pdp-name">${p.name}</h1>
 
       <p class="pdp-rating">
@@ -76,7 +76,7 @@ function renderProduct() {
         </div>
         <button class="btn btn-primary pdp-add" id="pdpAdd">Add to bag</button>
       </div>
-      <a class="btn pdp-buynow" id="pdpBuy" href="cart.html">Buy it now</a>
+      <a class="btn pdp-buynow" id="pdpBuy" href="cart">Buy it now</a>
 
       <ul class="pdp-perks">
         <li>Free delivery over ৳5,000 · ships in 2–4 days</li>

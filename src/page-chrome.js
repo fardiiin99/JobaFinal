@@ -77,7 +77,7 @@ if (searchBtn && typeof catalogue !== 'undefined') {
       return;
     }
     results.innerHTML = hits.map(p => `
-      <a class="search-item" href="product.html?id=${p.id}">
+      <a class="search-item" href="product?id=${p.id}">
         <img src="images/${p.img}" alt="${p.name}" style="object-position:${p.pos}">
         <div class="search-item-body">
           <p class="search-item-cat">${p.cat}</p>

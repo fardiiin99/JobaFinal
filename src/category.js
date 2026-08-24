@@ -12,7 +12,7 @@ const categoryProducts = category
 
 function renderNotFound() {
   document.getElementById('categoryCrumb').innerHTML =
-    `<a href="index.html">Home</a><span>/</span><span>Shop by Weave</span>`;
+    `<a href="/">Home</a><span>/</span><span>Shop by Weave</span>`;
   document.getElementById('categoryBanner').innerHTML = '';
   document.getElementById('categoryHead').innerHTML = '';
   document.getElementById('categoryGrid').className = 'cart-layout-empty';
@@ -20,7 +20,7 @@ function renderNotFound() {
     <div class="cart-empty">
       <h2>Category not found</h2>
       <p>That weave isn’t in the catalogue — browse everything we carry instead.</p>
-      <a href="index.html#collections" class="btn btn-primary">Shop by Weave</a>
+      <a href="/#collections" class="btn btn-primary">Shop by Weave</a>
     </div>`;
 }
 
@@ -28,8 +28,8 @@ function renderCategory() {
   document.title = `${category.name} Sarees — Joba`;
 
   document.getElementById('categoryCrumb').innerHTML = `
-    <a href="index.html">Home</a><span>/</span>
-    <a href="index.html#collections">Shop by Weave</a><span>/</span>
+    <a href="/">Home</a><span>/</span>
+    <a href="/#collections">Shop by Weave</a><span>/</span>
     <span>${category.name}</span>`;
 
   document.getElementById('categoryBanner').innerHTML = `
@@ -52,7 +52,7 @@ function renderCategory() {
       <div class="cart-empty">
         <h2>Nothing here yet</h2>
         <p>New pieces in this weave are on the way — check back soon.</p>
-        <a href="new-arrivals.html" class="btn btn-primary">Shop New Arrivals</a>
+        <a href="new-arrivals" class="btn btn-primary">Shop New Arrivals</a>
       </div>`;
     return;
   }

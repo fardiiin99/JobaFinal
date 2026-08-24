@@ -18,7 +18,7 @@ function renderCart() {
         ${bagIcon}
         <h2>Your bag is empty</h2>
         <p>Explore the new arrivals and find your next drape.</p>
-        <a href="new-arrivals.html" class="btn btn-primary">Shop New Arrivals</a>
+        <a href="new-arrivals" class="btn btn-primary">Shop New Arrivals</a>
       </div>`;
     renderAlsoLike(lines);
     return;
@@ -55,7 +55,7 @@ function renderCart() {
         <button type="submit" class="btn btn-ghost-dark">Apply</button>
       </form>
       <p class="promo-note" id="promoNote"></p>
-      <a href="checkout.html" class="btn btn-primary cart-checkout">Checkout · ${taka(total)}</a>
+      <a href="checkout" class="btn btn-primary cart-checkout">Checkout · ${taka(total)}</a>
     </aside>`;
 
   layout.className = 'cart-layout';

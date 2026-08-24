@@ -27,7 +27,7 @@ function renderCheckout() {
         ${bagIcon}
         <h2>Your bag is empty</h2>
         <p>Add something to your bag before checking out.</p>
-        <a href="new-arrivals.html" class="btn btn-primary">Shop New Arrivals</a>
+        <a href="new-arrivals" class="btn btn-primary">Shop New Arrivals</a>
       </div>`;
     return;
   }
@@ -158,7 +158,7 @@ function renderConfirmation(order) {
       </div>
       <div class="summary-row summary-total"><span>Total</span><span>${taka(order.total)}</span></div>
       <p class="confirm-detail">${paymentLabel} · Delivering to ${order.address}</p>
-      <a href="index.html" class="btn btn-primary">Continue Shopping</a>
+      <a href="/" class="btn btn-primary">Continue Shopping</a>
     </div>`;
 }
 

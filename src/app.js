@@ -10,7 +10,7 @@
 const arrowIcon = `<svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>`;
 
 document.getElementById('catGrid').innerHTML = categories.map(c => `
-  <a class="cat ${c.size}" href="category.html?c=${c.slug}">
+  <a class="cat ${c.size}" href="category?c=${c.slug}">
     <img class="cat-bg" src="${imgSrc(c.img)}" alt="${c.name} saree"
          loading="lazy" style="object-position:${c.pos}">
     <span class="cat-count">${c.count}</span>
