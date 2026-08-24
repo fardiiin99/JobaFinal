@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Joba — Handwoven Sarees</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ── Announcement ─────────────────────────────────────── -->
+<div class="announce">
+  <div class="announce-track">
+    <span>Free delivery across Bangladesh on orders over ৳5,000</span>
+    <span class="announce-flower" aria-hidden="true"><img src="images/hibiscus.png" alt=""></span>
+    <span>New Jamdani drop — live now</span>
+    <span class="announce-flower" aria-hidden="true"><img src="images/hibiscus.png" alt=""></span>
+    <span>Handwoven in Narayanganj since 1994</span>
+    <span class="announce-flower" aria-hidden="true"><img src="images/hibiscus.png" alt=""></span>
+    <span>Free delivery across Bangladesh on orders over ৳5,000</span>
+    <span class="announce-flower" aria-hidden="true"><img src="images/hibiscus.png" alt=""></span>
+    <span>New Jamdani drop — live now</span>
+    <span class="announce-flower" aria-hidden="true"><img src="images/hibiscus.png" alt=""></span>
+    <span>Handwoven in Narayanganj since 1994</span>
+    <span class="announce-flower" aria-hidden="true"><img src="images/hibiscus.png" alt=""></span>
+  </div>
+</div>
+
+<!-- ── Header ───────────────────────────────────────────── -->
+<header class="header" id="header">
+  <div class="wrap header-inner">
+    <button class="icon-btn menu-btn" aria-label="Menu" id="menuBtn">
+      <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+
+    <a href="#" class="logo" aria-label="Joba home">
+      <img class="logo-img" src="images/jobalogo.png" alt="House of Joba">
+    </a>
+
+    <nav class="nav" id="nav">
+            <div class="nav-group">
+        <button class="nav-trigger" aria-expanded="false" aria-haspopup="true">Shop
+          <svg class="nav-caret" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-menu">
+          <a href="shop.html">Shop All</a>
+          <a href="new-arrivals.html">New In</a>
+          <a href="best-sellers.html">Best Sellers</a>
+          <a href="index.html#collections">Shop by Weave</a>
+        </div>
+      </div>
+      <a href="our-story.html">Our Story</a>
+      <a href="sale.html" class="nav-sale">Sale</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-btn" aria-label="Search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      </button>
+      <a class="icon-btn cart-btn" aria-label="Cart" id="cartBtn" href="cart.html">
+        <svg viewBox="0 0 24 24"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ── Hero slider ──────────────────────────────────────── -->
+<section class="hero-slider" id="heroSlider" aria-label="Featured sarees">
+  <div class="slides" id="slides">
+    <div class="slide"><img src="images/hero-saree-drape.png" alt="Maroon and gold silk saree" style="object-position:50% 30%"></div>
+    <div class="slide"><img src="images/royal-blue-dabu.jpg" alt="Royal blue dabu saree" style="object-position:50% 35%"></div>
+    <div class="slide"><img src="images/ivory-floral-chanderi.jpg" alt="Ivory floral Chanderi saree" style="object-position:50% 45%"></div>
+    <div class="slide"><img src="images/lilac-mirrorwork-mul.jpg" alt="Lilac mirror-work mul saree" style="object-position:50% 40%"></div>
+    <div class="slide"><img src="images/green-kota-butterfly.jpg" alt="Green Kota Doria saree" style="object-position:50% 40%"></div>
+  </div>
+  <button class="slider-arrow prev" id="sliderPrev" aria-label="Previous slide">
+    <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+  </button>
+  <button class="slider-arrow next" id="sliderNext" aria-label="Next slide">
+    <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+  </button>
+  <a href="shop.html" class="btn btn-primary hero-cta-btn">Shop Now</a>
+  <div class="slider-dots" id="sliderDots"><!-- injected by app.js --></div>
+</section>
+
+<!-- ── Category grid ────────────────────────────────────── -->
+<section class="section wrap" id="collections">
+  <div class="section-head">
+    <h2>Shop by Weave</h2>
+    <a href="#" class="view-all rail-controls">All categories</a>
+  </div>
+  <div class="cat-grid" id="catGrid"><!-- injected by app.js --></div>
+</section>
+
+<!-- ── New Arrivals rail ────────────────────────────────── -->
+<section class="section wrap" id="new">
+  <div class="section-head">
+    <h2>New Arrivals</h2>
+    <div class="rail-controls">
+      <button class="round-btn" id="prevBtn" aria-label="Previous">
+        <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <button class="round-btn" id="nextBtn" aria-label="Next">
+        <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <a href="new-arrivals.html" class="view-all">View all</a>
+    </div>
+  </div>
+  <div class="rail" id="rail"><!-- products injected by app.js --></div>
+</section>
+
+<!-- ── Best sellers ─────────────────────────────────────── -->
+<section class="section wrap" id="bestsellers">
+  <div class="section-head">
+    <h2>Best Sellers</h2>
+    <p class="head-note">Ranked by units sold in the last 90 days</p>
+    <a href="best-sellers.html" class="view-all rail-controls">View all</a>
+  </div>
+  <div class="grid-products" id="bestGrid"><!-- injected by app.js --></div>
+</section>
+
+<!-- ── Reviews ──────────────────────────────────────────── -->
+<section class="section wrap" id="reviews">
+  <div class="section-head">
+    <h2>Loved by 6,200+ Customers</h2>
+    <p class="head-note">4.9★ average · verified buyers only</p>
+  </div>
+  <div class="reviews-grid" id="reviewsGrid"><!-- injected by app.js --></div>
+</section>
+
+<!-- ── Instagram / community ────────────────────────────── -->
+<section class="section wrap" id="community">
+  <div class="section-head">
+    <h2>As Styled by You</h2>
+    <a href="https://www.instagram.com/explore/tags/joba/" class="view-all" target="_blank" rel="noopener">Tag <strong>@joba</strong> to be featured →</a>
+  </div>
+  <div class="ig-grid" id="igGrid"><!-- injected by app.js --></div>
+</section>
+
+<!-- ── Newsletter ───────────────────────────────────────── -->
+<section class="newsletter">
+  <div class="wrap news-inner">
+    <div>
+      <h2>Get first look at every drop</h2>
+      <p>New weaves land on Thursdays. Subscribers get 24 hours of early access.</p>
+    </div>
+    <form class="news-form" id="newsForm">
+      <input type="email" placeholder="you@email.com" aria-label="Email address" required>
+      <button class="btn btn-primary" type="submit">Notify me</button>
+    </form>
+  </div>
+</section>
+
+<!-- ── Footer ───────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <img class="logo-img footer-logo" src="images/jobalogo.png" alt="House of Joba">
+      <p>Handwoven sarees from Bangladesh. Narayanganj · Dhaka · Tangail.</p>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <a href="category.html?c=indigo-dabu">Indigo Dabu</a>
+      <a href="category.html?c=chanderi">Chanderi</a>
+      <a href="category.html?c=mul-cotton">Mul Cotton</a>
+      <a href="category.html?c=kota-doria">Kota Doria</a>
+      <a href="category.html?c=bagru-print">Bagru Print</a>
+      <a href="category.html?c=hand-block">Hand Block Cotton</a>
+    </div>
+    <div>
+      <h4>Help</h4>
+      <a href="#">Size &amp; drape guide</a><a href="#">Shipping</a><a href="#">Returns</a><a href="#">Track order</a>
+    </div>
+    <div>
+      <h4>About</h4>
+      <a href="#">Our weavers</a><a href="#">Sustainability</a><a href="#">Stores</a><a href="#">Contact</a>
+    </div>
+  </div>
+  <div class="wrap footer-bar">
+    <span>© 2026 Joba Handloom Ltd.</span>
+    <span>Privacy · Terms</span>
+  </div>
+</footer>
+
+<script src="products.js"></script>
+<script src="cart-core.js"></script>
+<script src="page-chrome.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

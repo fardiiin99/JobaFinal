@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — House of Joba</title>
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="admin">
+
+  <!-- ── Sidebar ──────────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <a class="side-brand" href="index.html">
+      <img src="images/jobalogo.png" alt="House of Joba">
+    </a>
+    <nav class="side-nav">
+      <button class="side-link is-active" data-view="dashboard">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        <span>Dashboard</span>
+      </button>
+      <button class="side-link" data-view="products">
+        <svg viewBox="0 0 24 24"><path d="M4 7l8-4 8 4v10l-8 4-8-4z"/><path d="M4 7l8 4 8-4M12 11v10"/></svg>
+        <span>Products</span>
+      </button>
+      <button class="side-link" data-view="orders">
+        <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
+        <span>Orders</span>
+      </button>
+      <button class="side-link" data-view="customers">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+        <span>Customers</span>
+      </button>
+      <button class="side-link" data-view="analytics">
+        <svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+        <span>Analytics</span>
+      </button>
+      <button class="side-link" data-view="finance">
+        <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
+        <span>Finance</span>
+      </button>
+      <button class="side-link" data-view="settings">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.6-2-3.4-2.4 1a7 7 0 0 0-1.7-1l-.4-2.6h-4l-.4 2.6a7 7 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7 7 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6a7 7 0 0 0 .1-1z"/></svg>
+        <span>Settings</span>
+      </button>
+    </nav>
+    <div class="side-user">
+      <div class="side-avatar">AK</div>
+      <div class="side-user-info">
+        <strong>Azmayeen A.</strong>
+        <span>Store owner</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main ─────────────────────────────────────────── -->
+  <div class="main">
+    <header class="topbar">
+      <button class="mobile-menu" id="mobileMenu" aria-label="Menu">
+        <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <h1 id="viewTitle">Dashboard</h1>
+      <div class="topbar-actions">
+        <div class="topbar-search">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input type="search" placeholder="Search…" aria-label="Search">
+        </div>
+        <button class="topbar-btn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 21h4"/></svg>
+          <span class="topbar-dot"></span>
+        </button>
+        <a class="topbar-store" href="index.html" target="_blank">View store ↗</a>
+      </div>
+    </header>
+
+    <main class="content" id="content"><!-- views injected by admin.js --></main>
+  </div>
+</div>
+
+<!-- ── Product modal ──────────────────────────────────── -->
+<div class="modal-overlay" id="modal" hidden>
+  <div class="modal" role="dialog" aria-label="Product">
+    <div class="modal-head">
+      <h2 id="modalTitle">Add product</h2>
+      <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+    </div>
+    <form class="modal-form" id="productForm">
+      <input type="hidden" id="pf-id">
+      <div class="mf-row">
+        <label>Product name<input id="pf-name" required></label>
+        <label>Category
+          <select id="pf-cat"></select>
+        </label>
+      </div>
+      <div class="mf-row">
+        <label>Price (৳)<input id="pf-price" type="number" min="0" required></label>
+        <label>Old price (৳) <span>optional</span><input id="pf-old" type="number" min="0"></label>
+      </div>
+      <div class="mf-row">
+        <label>Stock<input id="pf-stock" type="number" min="0" required></label>
+        <label>Rating<input id="pf-rating" type="number" min="0" max="5" step="0.1"></label>
+      </div>
+      <label>Status
+        <select id="pf-active"><option value="true">Active</option><option value="false">Draft</option></select>
+      </label>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" id="modalCancel">Cancel</button>
+        <button type="submit" class="btn-primary">Save product</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="products.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
