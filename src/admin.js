@@ -39,7 +39,8 @@ const shortDate = iso => new Date(iso)
 
 /* ── Persistence ───────────────────────────────────────── */
 const KEYS = { crm: 'jobaCRM', deals: 'jobaDeals', products: 'jobaAdminProducts', settings: 'jobaAdminSettings',
-               hero: 'jobaHeroSlides', categories: 'jobaCategories', reviews: 'jobaReviews', community: 'jobaCommunity' };
+               hero: 'jobaHeroSlides', categories: 'jobaCategories', reviews: 'jobaReviews', community: 'jobaCommunity',
+               orderStatus: 'jobaOrderStatus' };
 
 function readFileAsDataURL(file) {
   return new Promise((resolve, reject) => {
@@ -103,6 +104,10 @@ const orders = crmContacts.map((c, i) => {
     date: `2026-08-${String(Math.max(day, 1)).padStart(2, '0')}`
   };
 });
+
+const ORDER_STATUSES = ['processing', 'shipped', 'delivered', 'pending', 'cancelled'];
+const orderStatusOverrides = load(KEYS.orderStatus, {});
+orders.forEach(o => { if (orderStatusOverrides[o.id]) o.status = orderStatusOverrides[o.id]; });
 
 /* ── Shared metrics ────────────────────────────────────── */
 const SALES  = [180, 220, 260, 240, 310, 290, 360, 400, 380, 450, 520, 610]; // ৳ thousands
@@ -691,7 +696,12 @@ function renderOrderRows() {
             <td>${esc(o.product)}</td>
             <td class="t-right num">${o.qty}</td>
             <td class="t-right num">${taka(o.total)}</td>
-            <td><span class="pill ${STATUS_TONE[o.status]}">${o.status[0].toUpperCase() + o.status.slice(1)}</span></td>
+            <td>
+              <select class="status-select ${STATUS_TONE[o.status]}" data-id="${o.id}">
+                ${ORDER_STATUSES.map(s =>
+                  `<option value="${s}" ${o.status === s ? 'selected' : ''}>${s[0].toUpperCase() + s.slice(1)}</option>`).join('')}
+              </select>
+            </td>
             <td class="muted">${shortDate(o.date)}</td>
           </tr>`).join('')}</tbody>
       </table>
@@ -702,7 +712,21 @@ function renderOrderRows() {
     </div>`;
 
   $('ordersTable').querySelectorAll('tr[data-contact]').forEach(tr =>
-    tr.addEventListener('click', () => openContactDrawer(tr.dataset.contact)));
+    tr.addEventListener('click', e => {
+      if (e.target.closest('select')) return;
+      openContactDrawer(tr.dataset.contact);
+    }));
+
+  $('ordersTable').querySelectorAll('.status-select').forEach(sel =>
+    sel.addEventListener('change', () => {
+      const o = orders.find(x => x.id === sel.dataset.id);
+      o.status = sel.value;
+      const overrides = load(KEYS.orderStatus, {});
+      overrides[o.id] = sel.value;
+      save(KEYS.orderStatus, overrides);
+      toast(`Order #${o.id} marked ${o.status}`);
+      viewOrders();
+    }));
 }
 
 /* ── Products ──────────────────────────────────────────── */
