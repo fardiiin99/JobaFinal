@@ -92,6 +92,13 @@ const ORDER_STATUS = ['delivered', 'shipped', 'processing', 'delivered', 'pendin
 const STATUS_TONE = { delivered: 'green', shipped: 'blue', processing: 'amber',
                       pending: 'grey', cancelled: 'red' };
 
+const ADDRESS_LINES = [
+  'House 14, Road 7, Dhanmondi', 'Flat 3B, Road 27, Banani', 'House 62, Sector 11, Uttara',
+  'Holding 9, GEC Circle', 'House 21, Housing Estate', 'Flat 5A, Zindabazar',
+  'House 8, New Market Area', 'House 33, Lane 4, Shaheb Bazar', 'Flat 2C, Sona Road',
+  'House 17, College Road', 'House 5, Notun Bazar', 'Flat 1B, Chandra Road'
+];
+
 const orders = crmContacts.map((c, i) => {
   const list = Object.values(catalogue);
   const prod = list[i % list.length];
@@ -99,6 +106,7 @@ const orders = crmContacts.map((c, i) => {
   const day = 21 - i;
   return {
     id: 'JB' + (1042 - i), contactId: c.id, customer: c.name, city: c.city,
+    address: `${ADDRESS_LINES[i % ADDRESS_LINES.length]}, ${c.city}`,
     product: prod.name, productId: prod.id, qty, total: prod.price * qty,
     status: ORDER_STATUS[i % ORDER_STATUS.length],
     date: `2026-08-${String(Math.max(day, 1)).padStart(2, '0')}`
@@ -685,14 +693,15 @@ function renderOrderRows() {
     <div class="table-scroll">
       <table>
         <thead>
-          <tr><th>Order</th><th>Customer</th><th>Product</th>
+          <tr><th>Order</th><th>Customer</th><th>Delivery address</th><th>Product</th>
               <th class="t-right">Qty</th><th class="t-right">Total</th>
               <th>Status</th><th>Date</th></tr>
         </thead>
         <tbody>${list.map(o => `
           <tr class="is-clickable" data-contact="${o.contactId}">
             <td><strong>#${esc(o.id)}</strong></td>
-            <td>${esc(o.customer)} <span class="muted">· ${esc(o.city)}</span></td>
+            <td>${esc(o.customer)}</td>
+            <td class="muted" style="max-width:220px">${esc(o.address)}</td>
             <td>${esc(o.product)}</td>
             <td class="t-right num">${o.qty}</td>
             <td class="t-right num">${taka(o.total)}</td>
