@@ -38,7 +38,17 @@ const shortDate = iso => new Date(iso)
   .toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 
 /* ── Persistence ───────────────────────────────────────── */
-const KEYS = { crm: 'jobaCRM', deals: 'jobaDeals', products: 'jobaAdminProducts', settings: 'jobaAdminSettings' };
+const KEYS = { crm: 'jobaCRM', deals: 'jobaDeals', products: 'jobaAdminProducts', settings: 'jobaAdminSettings',
+               hero: 'jobaHeroSlides', categories: 'jobaCategories', reviews: 'jobaReviews', community: 'jobaCommunity' };
+
+function readFileAsDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
 
 function load(key, fallback) {
   try {
@@ -738,7 +748,7 @@ function productRow(p) {
     <tr data-id="${p.id}">
       <td>
         <div class="cell-prod">
-          <img src="${IMG}${p.img}" alt="">
+          <img src="${imgSrc(p.img)}" alt="">
           <div><strong>${esc(p.name)}</strong><span>${esc(p.cat)}</span></div>
         </div>
       </td>
@@ -858,9 +868,6 @@ function viewFinance() {
   $('content').innerHTML = `
     <div class="view-head">
       <div><h2>Finance</h2><p>Cash position, margin and settlement activity</p></div>
-      <div class="view-head-actions">
-        <button class="btn btn-primary" id="payoutBtn">Withdraw funds</button>
-      </div>
     </div>
 
     <div class="kpi-grid">
@@ -941,7 +948,6 @@ function viewFinance() {
       </div>
     </div>`;
 
-  $('payoutBtn').onclick = () => toast('Withdrawal requested · ' + taka(profit - pending));
 }
 
 /* ── Settings ──────────────────────────────────────────── */
@@ -998,6 +1004,65 @@ function viewSettings() {
           <button class="btn btn-danger" id="resetAdmin">Reset admin data</button>
         </div>
       </div>
+
+      <div class="panel span-2">
+        <div class="panel-head">
+          <h3>Homepage hero</h3>
+          <span class="meta">${heroSlides.length} slides</span>
+        </div>
+        <div class="media-list" id="heroList">
+          ${heroSlides.map((s, i) => heroSlideRow(s, i)).join('')}
+        </div>
+        <div class="form-foot">
+          <label class="btn btn-ghost file-btn">${icon('plus')} Add slide
+            <input type="file" accept="image/*" id="heroAddFile" hidden>
+          </label>
+          <button class="btn btn-primary" id="heroSave">Save hero</button>
+        </div>
+      </div>
+
+      <div class="panel span-2">
+        <div class="panel-head">
+          <h3>Categories</h3>
+          <span class="meta">${categories.length} categories</span>
+        </div>
+        <div class="media-list" id="catList">
+          ${categories.map((c, i) => categoryRow(c, i)).join('')}
+        </div>
+        <div class="form-foot">
+          <button class="btn btn-primary" id="catSave">Save categories</button>
+        </div>
+      </div>
+
+      <div class="panel span-2">
+        <div class="panel-head">
+          <h3>Reviews</h3>
+          <span class="meta">${reviews.length} reviews</span>
+        </div>
+        <div class="media-list" id="reviewList">
+          ${reviews.map((r, i) => reviewRow(r, i)).join('')}
+        </div>
+        <div class="form-foot">
+          <button class="btn btn-ghost" id="reviewAdd">${icon('plus')} Add review</button>
+          <button class="btn btn-primary" id="reviewSave">Save reviews</button>
+        </div>
+      </div>
+
+      <div class="panel span-2">
+        <div class="panel-head">
+          <h3>Community ("As Styled by You")</h3>
+          <span class="meta">${igPosts.length} posts</span>
+        </div>
+        <div class="media-list" id="communityList">
+          ${igPosts.map((p, i) => communityRow(p, i)).join('')}
+        </div>
+        <div class="form-foot">
+          <label class="btn btn-ghost file-btn">${icon('plus')} Add post
+            <input type="file" accept="image/*" id="communityAddFile" hidden>
+          </label>
+          <button class="btn btn-primary" id="communitySave">Save community</button>
+        </div>
+      </div>
     </div>`;
 
   $('settingsForm').onsubmit = e => {
@@ -1023,6 +1088,166 @@ function viewSettings() {
     settings = { ...DEFAULT_SETTINGS };
     route('settings'); toast('Admin data reset');
   };
+
+  $('content').querySelectorAll('.hero-alt').forEach(inp =>
+    inp.onchange = () => { heroSlides[+inp.dataset.i].alt = inp.value; });
+
+  $('content').querySelectorAll('.hero-replace').forEach(inp =>
+    inp.onchange = async () => {
+      const file = inp.files[0]; if (!file) return;
+      heroSlides[+inp.dataset.i].img = await readFileAsDataURL(file);
+      route('settings'); toast('Slide photo updated');
+    });
+
+  $('content').querySelectorAll('.hero-remove').forEach(btn =>
+    btn.onclick = () => {
+      if (heroSlides.length <= 1) return toast('Keep at least one slide');
+      heroSlides.splice(+btn.dataset.i, 1);
+      route('settings');
+    });
+
+  $('heroAddFile').onchange = async e => {
+    const file = e.target.files[0]; if (!file) return;
+    heroSlides.push({ img: await readFileAsDataURL(file), alt: '', pos: '50% 50%' });
+    route('settings');
+  };
+
+  $('heroSave').onclick = () => { save(KEYS.hero, heroSlides); toast('Homepage hero saved'); };
+
+  $('content').querySelectorAll('.cat-name').forEach(inp =>
+    inp.onchange = () => { categories[+inp.dataset.i].name = inp.value; });
+
+  $('content').querySelectorAll('.cat-desc').forEach(inp =>
+    inp.onchange = () => { categories[+inp.dataset.i].desc = inp.value; });
+
+  $('content').querySelectorAll('.cat-replace').forEach(inp =>
+    inp.onchange = async () => {
+      const file = inp.files[0]; if (!file) return;
+      categories[+inp.dataset.i].img = await readFileAsDataURL(file);
+      route('settings'); toast('Category photo updated');
+    });
+
+  $('catSave').onclick = () => { save(KEYS.categories, categories); toast('Categories saved'); };
+
+  $('content').querySelectorAll('.rv-name').forEach(inp =>
+    inp.onchange = () => { reviews[+inp.dataset.i].name = inp.value.trim(); });
+  $('content').querySelectorAll('.rv-city').forEach(inp =>
+    inp.onchange = () => { reviews[+inp.dataset.i].city = inp.value.trim(); });
+  $('content').querySelectorAll('.rv-product').forEach(inp =>
+    inp.onchange = () => { reviews[+inp.dataset.i].product = inp.value.trim(); });
+  $('content').querySelectorAll('.rv-rating').forEach(sel =>
+    sel.onchange = () => { reviews[+sel.dataset.i].rating = +sel.value; });
+  $('content').querySelectorAll('.rv-text').forEach(ta =>
+    ta.onchange = () => { reviews[+ta.dataset.i].text = ta.value.trim(); });
+
+  $('content').querySelectorAll('.rv-remove').forEach(btn =>
+    btn.onclick = () => {
+      if (reviews.length <= 1) return toast('Keep at least one review');
+      reviews.splice(+btn.dataset.i, 1);
+      route('settings');
+    });
+
+  $('reviewAdd').onclick = () => {
+    reviews.push({ name: '', city: '', rating: 5, product: '', text: '' });
+    route('settings');
+  };
+
+  $('reviewSave').onclick = () => { save(KEYS.reviews, reviews); toast('Reviews saved'); };
+
+  $('content').querySelectorAll('.ig-handle').forEach(inp =>
+    inp.onchange = () => { igPosts[+inp.dataset.i].handle = inp.value.trim().replace(/^@/, ''); });
+  $('content').querySelectorAll('.ig-caption').forEach(inp =>
+    inp.onchange = () => { igPosts[+inp.dataset.i].caption = inp.value.trim(); });
+  $('content').querySelectorAll('.ig-ratio').forEach(sel =>
+    sel.onchange = () => { igPosts[+sel.dataset.i].ratio = sel.value; });
+
+  $('content').querySelectorAll('.ig-replace').forEach(inp =>
+    inp.onchange = async () => {
+      const file = inp.files[0]; if (!file) return;
+      igPosts[+inp.dataset.i].img = await readFileAsDataURL(file);
+      route('settings'); toast('Post photo updated');
+    });
+
+  $('content').querySelectorAll('.ig-remove').forEach(btn =>
+    btn.onclick = () => {
+      if (igPosts.length <= 1) return toast('Keep at least one post');
+      igPosts.splice(+btn.dataset.i, 1);
+      route('settings');
+    });
+
+  $('communityAddFile').onchange = async e => {
+    const file = e.target.files[0]; if (!file) return;
+    igPosts.push({ img: await readFileAsDataURL(file), ratio: 'sq', handle: '', caption: '' });
+    route('settings');
+  };
+
+  $('communitySave').onclick = () => { save(KEYS.community, igPosts); toast('Community wall saved'); };
+}
+
+function heroSlideRow(s, i) {
+  return `
+    <div class="media-row" data-i="${i}">
+      <img src="${imgSrc(s.img)}" alt="">
+      <input class="hero-alt" data-i="${i}" placeholder="Alt text" value="${esc(s.alt || '')}">
+      <label class="icon-btn file-btn" title="Replace photo">${icon('edit')}
+        <input type="file" accept="image/*" class="hero-replace" data-i="${i}" hidden>
+      </label>
+      <button class="icon-btn hero-remove" data-i="${i}" title="Remove">${icon('trash')}</button>
+    </div>`;
+}
+
+function categoryRow(c, i) {
+  return `
+    <div class="media-row" data-i="${i}">
+      <img src="${imgSrc(c.img)}" alt="">
+      <div class="cat-row-fields">
+        <input class="cat-name" data-i="${i}" placeholder="Name" value="${esc(c.name)}">
+        <input class="cat-desc" data-i="${i}" placeholder="Description" value="${esc(c.desc)}">
+      </div>
+      <label class="icon-btn file-btn" title="Replace photo">${icon('edit')}
+        <input type="file" accept="image/*" class="cat-replace" data-i="${i}" hidden>
+      </label>
+    </div>`;
+}
+
+function reviewRow(r, i) {
+  return `
+    <div class="media-row review-row" data-i="${i}">
+      <div class="review-row-fields">
+        <div class="form-row">
+          <input class="rv-name" data-i="${i}" placeholder="Customer name" value="${esc(r.name)}">
+          <input class="rv-city" data-i="${i}" placeholder="City" value="${esc(r.city)}">
+        </div>
+        <div class="form-row">
+          <input class="rv-product" data-i="${i}" placeholder="Product bought" value="${esc(r.product)}">
+          <select class="rv-rating" data-i="${i}">
+            ${[5, 4, 3, 2, 1].map(n =>
+              `<option value="${n}" ${r.rating === n ? 'selected' : ''}>${n} star${n > 1 ? 's' : ''}</option>`).join('')}
+          </select>
+        </div>
+        <textarea class="rv-text" data-i="${i}" rows="2" placeholder="Review text">${esc(r.text)}</textarea>
+      </div>
+      <button class="icon-btn rv-remove" data-i="${i}" title="Remove">${icon('trash')}</button>
+    </div>`;
+}
+
+function communityRow(p, i) {
+  return `
+    <div class="media-row" data-i="${i}">
+      <img src="${imgSrc(p.img)}" alt="">
+      <div class="cat-row-fields">
+        <input class="ig-handle" data-i="${i}" placeholder="Instagram handle" value="${esc(p.handle)}">
+        <input class="ig-caption" data-i="${i}" placeholder="Caption" value="${esc(p.caption)}">
+      </div>
+      <select class="ig-ratio" data-i="${i}">
+        <option value="sq" ${p.ratio === 'sq' ? 'selected' : ''}>Square</option>
+        <option value="tall" ${p.ratio === 'tall' ? 'selected' : ''}>Tall</option>
+      </select>
+      <label class="icon-btn file-btn" title="Replace photo">${icon('edit')}
+        <input type="file" accept="image/*" class="ig-replace" data-i="${i}" hidden>
+      </label>
+      <button class="icon-btn ig-remove" data-i="${i}" title="Remove">${icon('trash')}</button>
+    </div>`;
 }
 
 /* ═════════════════════════════════════════════════════════
@@ -1142,7 +1367,15 @@ function openDealModal() {
 
 function openProductModal(id) {
   const p = id ? products.find(x => x.id === id) : null;
+  let photo = p ? p.img : null;
   openModal(p ? 'Edit product' : 'Add product', `
+    <div class="form-row" style="align-items:center">
+      <img id="f-photo-preview" src="${imgSrc(photo || categories[0].img)}" alt=""
+           style="width:56px;height:56px;object-fit:cover;border-radius:8px;flex:0 0 auto">
+      <label class="btn btn-ghost file-btn" style="flex:1">Upload photo
+        <input type="file" accept="image/*" id="f-photo" hidden>
+      </label>
+    </div>
     <div class="form-row">
       <label>Product name<input id="f-pname" required value="${esc(p?.name || '')}"></label>
       <label>Category
@@ -1175,14 +1408,19 @@ function openProductModal(id) {
         stock: +$('f-stock').value, rating: +$('f-rating').value || 4.8,
         active: $('f-active').value === 'true'
       };
-      if (p) { Object.assign(p, data); toast('Product updated'); }
+      if (p) { Object.assign(p, data, { img: photo || p.img }); toast('Product updated'); }
       else {
-        products.unshift({ id: 'p' + Date.now(), img: cat.img, sold: 0, ...data });
+        products.unshift({ id: 'p' + Date.now(), img: photo || cat.img, sold: 0, ...data });
         toast('Product added');
       }
       save(KEYS.products, products);
       closeModal(); viewProducts();
     });
+  $('f-photo').onchange = async e => {
+    const file = e.target.files[0]; if (!file) return;
+    photo = await readFileAsDataURL(file);
+    $('f-photo-preview').src = photo;
+  };
 }
 
 /* ═════════════════════════════════════════════════════════

@@ -6,6 +6,10 @@
 
 const IMG = 'images/';
 
+/* Resolves a stored image ref to a usable <img src>. Admin-uploaded photos
+   are saved as data URIs; catalogue defaults are plain filenames under IMG. */
+const imgSrc = img => (img && img.startsWith('data:')) ? img : IMG + (img || '');
+
 /* Shop-by-weave categories. `slug` is the join key against each catalogue
    product's `catSlug` below, and the query param category.html reads. */
 const categories = [
@@ -22,6 +26,72 @@ const categories = [
   { name:'Hand Block Cotton', slug:'hand-block', desc:'Everyday drapes, printed by hand.', count:212, size:'full',
     img:'royal-blue-dabu.jpg',       pos:'50% 35%' }
 ];
+
+/* Homepage hero slides — editable from admin (Settings → Homepage). */
+const heroSlides = [
+  { img:'hero-saree-drape.png',    alt:'Maroon and gold silk saree',  pos:'50% 30%' },
+  { img:'royal-blue-dabu.jpg',     alt:'Royal blue dabu saree',       pos:'50% 35%' },
+  { img:'ivory-floral-chanderi.jpg', alt:'Ivory floral Chanderi saree', pos:'50% 45%' },
+  { img:'lilac-mirrorwork-mul.jpg', alt:'Lilac mirror-work mul saree', pos:'50% 40%' },
+  { img:'green-kota-butterfly.jpg', alt:'Green Kota Doria saree',     pos:'50% 40%' }
+];
+
+/* Homepage customer reviews — editable from admin (Settings → Reviews). */
+const reviews = [
+  { name:'Nusrat Jahan',   city:'Dhaka',       rating:5, product:'Nilkantha Dabu',
+    text:'The indigo actually looks hand-dipped, not printed — you can see where the resist cracked a little on the border. Wore it to a wedding and three people asked where it was from.' },
+  { name:'Farhana Akter',  city:'Chittagong',  rating:5, product:'Padma Indigo Mul',
+    text:'Mul cotton this soft usually falls apart after two washes. This one is on its twelfth and the colour hasn’t budged. Worth every taka.' },
+  { name:'Tanvir Ahmed',   city:'Sylhet',      rating:4, product:'Shorna Chanderi',
+    text:'Bought it for my wife’s birthday. Delivery took a day longer than promised but the saree itself is gorgeous — the embroidery is denser than the photos suggest.' },
+  { name:'Ishrat Zahan',   city:'Rajshahi',    rating:5, product:'Bakul Lilac Mul',
+    text:'Mirror work is all hand-placed, no glue smell, nothing crooked. My mother-in-law tried to keep it after borrowing it for a night, so — high praise.' },
+  { name:'Mehzabin Chowdhury', city:'Khulna',  rating:5, product:'Rajanigandha Blue',
+    text:'This is my third order from Joba. What keeps me coming back is that the block print is never perfectly even — that’s how you know a person made it, not a machine.' },
+  { name:'Rownok Hasan',   city:'Narayanganj', rating:5, product:'Prajapati Kota',
+    text:'Kota doria this crisp is hard to find outside Rajasthan, let alone here. The applique butterflies held their shape even after starching.' }
+];
+
+/* "As Styled by You" Instagram wall — editable from admin (Settings → Community).
+   Sample posts, placeholder handles, not real accounts.
+   ratio: 'sq' = 1:1, 'tall' = 9:16 (spans both rows). */
+const igPosts = [
+  { img:'green-kota-butterfly.jpg',  ratio:'sq',   handle:'nusrat.wears',     caption:'Kota border, up close 🌿' },
+  { img:'indigo-lotus-pallu.jpg',    ratio:'sq',   handle:'the.saree.diary',  caption:'Indigo dabu detail 💙' },
+  { img:'royal-blue-dabu.jpg',       ratio:'tall', handle:'anindita.dhk',     caption:'Lotus pallu for Boishakh 🌸' },
+  { img:'ivory-floral-chanderi.jpg', ratio:'sq',   handle:'rifah.styles',     caption:'Chanderi, wedding ready ✨' },
+  { img:'steel-blue-fish-block.jpg', ratio:'sq',   handle:'weave.and.wander', caption:'Fish block print 🐟' },
+  { img:'lilac-mirrorwork-mul.jpg',  ratio:'tall', handle:'maliha.k',         caption:'Royal blue, full drape' },
+  { img:'indigo-chevron-dabu.jpg',   ratio:'sq',   handle:'sadia.drapes',     caption:'Chevron dabu buti' },
+  { img:'hero-saree-drape.png',      ratio:'sq',   handle:'proma.styles',     caption:'Gold zari, Puja ready 💛' },
+  { img:'indigo-lotus-pallu.jpg',    ratio:'tall', handle:'farhana.wraps',    caption:'Lotus pallu, full drape 🌸' },
+  { img:'green-kota-butterfly.jpg',  ratio:'sq',   handle:'tahmina.threads',  caption:'Kota applique detail' },
+  { img:'royal-blue-dabu.jpg',       ratio:'sq',   handle:'nabila.k',         caption:'Dabu blues 💙' },
+  { img:'ivory-floral-chanderi.jpg', ratio:'tall', handle:'sumaya.drapes',    caption:'Chanderi, Puja night ✨' }
+];
+
+/* Admin-edited homepage content is saved to localStorage as plain JSON
+   (photos as data URIs). Apply it over the defaults on every page load. */
+(function applyStoreOverrides() {
+  try {
+    const heroSaved = JSON.parse(localStorage.getItem('jobaHeroSlides') || 'null');
+    if (Array.isArray(heroSaved) && heroSaved.length) {
+      heroSlides.splice(0, heroSlides.length, ...heroSaved);
+    }
+    const catSaved = JSON.parse(localStorage.getItem('jobaCategories') || 'null');
+    if (Array.isArray(catSaved) && catSaved.length) {
+      categories.splice(0, categories.length, ...catSaved);
+    }
+    const reviewsSaved = JSON.parse(localStorage.getItem('jobaReviews') || 'null');
+    if (Array.isArray(reviewsSaved) && reviewsSaved.length) {
+      reviews.splice(0, reviews.length, ...reviewsSaved);
+    }
+    const communitySaved = JSON.parse(localStorage.getItem('jobaCommunity') || 'null');
+    if (Array.isArray(communitySaved) && communitySaved.length) {
+      igPosts.splice(0, igPosts.length, ...communitySaved);
+    }
+  } catch {}
+})();
 
 /* One catalogue, keyed by id — the key doubles as the cart's SKU.
    `catSlug` joins each product to the categories list above. */
@@ -136,7 +206,7 @@ function productCard(p, i, mode) {
   <article class="product" data-id="${p.id}">
     <div class="p-media">
       <a class="p-link" href="${href}" aria-label="${p.name}">
-        <img class="p-photo" src="${IMG}${p.img}" alt="${p.name} — ${p.cat} saree"
+        <img class="p-photo" src="${imgSrc(p.img)}" alt="${p.name} — ${p.cat} saree"
              loading="lazy" style="object-position:${p.pos}">
       </a>
       ${flag}

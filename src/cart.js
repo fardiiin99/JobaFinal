@@ -28,7 +28,7 @@ function renderCart() {
 
   const itemsHtml = lines.map(l => `
     <div class="cart-item" data-id="${l.id}">
-      <img class="cart-item-photo" src="${IMG}${l.img}" style="object-position:${l.pos}" alt="${l.name}">
+      <img class="cart-item-photo" src="${imgSrc(l.img)}" style="object-position:${l.pos}" alt="${l.name}">
       <div class="cart-item-info">
         <p class="cart-item-cat">${l.cat}</p>
         <h3 class="cart-item-name">${l.name}</h3>

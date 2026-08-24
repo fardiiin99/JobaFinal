@@ -36,7 +36,7 @@ function renderCheckout() {
 
   const recapHtml = lines.map(l => `
     <div class="recap-row">
-      <img class="recap-photo" src="${IMG}${l.img}" style="object-position:${l.pos}" alt="${l.name}">
+      <img class="recap-photo" src="${imgSrc(l.img)}" style="object-position:${l.pos}" alt="${l.name}">
       <div class="recap-info">
         <p class="recap-name">${l.name}</p>
         <p class="recap-qty">Qty ${l.qty}</p>
@@ -148,7 +148,7 @@ function renderConfirmation(order) {
       <div class="order-recap order-recap-confirm">
         ${order.lines.map(l => `
           <div class="recap-row">
-            <img class="recap-photo" src="${IMG}${l.img}" style="object-position:${l.pos}" alt="${l.name}">
+            <img class="recap-photo" src="${imgSrc(l.img)}" style="object-position:${l.pos}" alt="${l.name}">
             <div class="recap-info">
               <p class="recap-name">${l.name}</p>
               <p class="recap-qty">Qty ${l.qty}</p>

@@ -36,7 +36,7 @@ function renderProduct() {
   document.getElementById('pdp').innerHTML = `
     <div class="pdp-gallery">
       <div class="pdp-main">
-        <img id="pdpMainImg" src="${IMG}${p.img}" alt="${p.name} — ${p.cat} saree"
+        <img id="pdpMainImg" src="${imgSrc(p.img)}" alt="${p.name} — ${p.cat} saree"
              style="object-position:${crops[0]}">
         <span class="badge ${p.tag === 'SALE' ? 'sale' : ''}">${p.tag}</span>
       </div>
@@ -44,7 +44,7 @@ function renderProduct() {
         ${crops.map((c, i) => `
           <button class="pdp-thumb${i === 0 ? ' is-active' : ''}" data-pos="${c}"
                   aria-label="View ${i + 1}">
-            <img src="${IMG}${p.img}" alt="" style="object-position:${c}">
+            <img src="${imgSrc(p.img)}" alt="" style="object-position:${c}">
           </button>`).join('')}
       </div>
     </div>

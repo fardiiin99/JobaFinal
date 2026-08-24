@@ -34,7 +34,7 @@ function renderCategory() {
 
   document.getElementById('categoryBanner').innerHTML = `
     <div class="category-hero">
-      <img src="${IMG}${category.img}" alt="${category.name} saree" style="object-position:${category.pos}">
+      <img src="${imgSrc(category.img)}" alt="${category.name} saree" style="object-position:${category.pos}">
       <div class="category-hero-copy">
         <h1>${category.name}</h1>
         <p>${category.desc}</p>

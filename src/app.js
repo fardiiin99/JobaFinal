@@ -11,7 +11,7 @@ const arrowIcon = `<svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></s
 
 document.getElementById('catGrid').innerHTML = categories.map(c => `
   <a class="cat ${c.size}" href="category.html?c=${c.slug}">
-    <img class="cat-bg" src="${IMG}${c.img}" alt="${c.name} saree"
+    <img class="cat-bg" src="${imgSrc(c.img)}" alt="${c.name} saree"
          loading="lazy" style="object-position:${c.pos}">
     <span class="cat-count">${c.count}</span>
     <div class="cat-copy">
@@ -22,6 +22,14 @@ document.getElementById('catGrid').innerHTML = categories.map(c => `
   </a>
 `).join('');
 
+/* ── Hero slides (data comes from products.js, admin-editable) ─── */
+const slidesTrack = document.getElementById('slides');
+if (slidesTrack) {
+  slidesTrack.innerHTML = heroSlides.map(s => `
+    <div class="slide"><img src="${imgSrc(s.img)}" alt="${s.alt || ''}" style="object-position:${s.pos || '50% 50%'}"></div>
+  `).join('');
+}
+
 const rail = document.getElementById('rail');
 rail.innerHTML = newArrivals.map((p, i) => productCard(p, i, 'new')).join('');
 
@@ -29,21 +37,8 @@ document.getElementById('bestGrid').innerHTML =
   bestSellers.map((p, i) => productCard(p, i, 'best')).join('');
 
 /* ── Reviews ──────────────────────────────────────────── */
-const reviews = [
-  { name:'Nusrat Jahan',   city:'Dhaka',       rating:5, product:'Nilkantha Dabu',
-    text:'The indigo actually looks hand-dipped, not printed — you can see where the resist cracked a little on the border. Wore it to a wedding and three people asked where it was from.' },
-  { name:'Farhana Akter',  city:'Chittagong',  rating:5, product:'Padma Indigo Mul',
-    text:'Mul cotton this soft usually falls apart after two washes. This one is on its twelfth and the colour hasn’t budged. Worth every taka.' },
-  { name:'Tanvir Ahmed',   city:'Sylhet',      rating:4, product:'Shorna Chanderi',
-    text:'Bought it for my wife’s birthday. Delivery took a day longer than promised but the saree itself is gorgeous — the embroidery is denser than the photos suggest.' },
-  { name:'Ishrat Zahan',   city:'Rajshahi',    rating:5, product:'Bakul Lilac Mul',
-    text:'Mirror work is all hand-placed, no glue smell, nothing crooked. My mother-in-law tried to keep it after borrowing it for a night, so — high praise.' },
-  { name:'Mehzabin Chowdhury', city:'Khulna',  rating:5, product:'Rajanigandha Blue',
-    text:'This is my third order from Joba. What keeps me coming back is that the block print is never perfectly even — that’s how you know a person made it, not a machine.' },
-  { name:'Rownok Hasan',   city:'Narayanganj', rating:5, product:'Prajapati Kota',
-    text:'Kota doria this crisp is hard to find outside Rajasthan, let alone here. The applique butterflies held their shape even after starching.' }
-];
-
+/* `reviews` array lives in products.js — shared with admin.js so the
+   homepage testimonials are editable from Settings. */
 const avatarColors = ['#c1263f', '#1f7a68', '#b8860b', '#6a3a8f', '#2f6ba8', '#c2661f'];
 
 document.getElementById('reviewsGrid').innerHTML = reviews.map((r, i) => `
@@ -63,27 +58,11 @@ document.getElementById('reviewsGrid').innerHTML = reviews.map((r, i) => `
 `).join('');
 
 /* ── Instagram community wall ─────────────────────────── */
-/* Sample community posts — placeholder handles, not real accounts. */
-/* ratio: 'sq' = 1:1, 'tall' = 9:16 (spans both rows). Pattern sq,sq,tall packs the
-   2-row strip flush; the strip scrolls horizontally. */
-const igPosts = [
-  { img:'images/green-kota-butterfly.jpg',  ratio:'sq',   handle:'nusrat.wears',     caption:'Kota border, up close 🌿' },
-  { img:'images/indigo-lotus-pallu.jpg',    ratio:'sq',   handle:'the.saree.diary',  caption:'Indigo dabu detail 💙' },
-  { img:'images/royal-blue-dabu.jpg',       ratio:'tall', handle:'anindita.dhk',     caption:'Lotus pallu for Boishakh 🌸' },
-  { img:'images/ivory-floral-chanderi.jpg', ratio:'sq',   handle:'rifah.styles',     caption:'Chanderi, wedding ready ✨' },
-  { img:'images/steel-blue-fish-block.jpg', ratio:'sq',   handle:'weave.and.wander', caption:'Fish block print 🐟' },
-  { img:'images/lilac-mirrorwork-mul.jpg',  ratio:'tall', handle:'maliha.k',         caption:'Royal blue, full drape' },
-  { img:'images/indigo-chevron-dabu.jpg',   ratio:'sq',   handle:'sadia.drapes',     caption:'Chevron dabu buti' },
-  { img:'images/hero-saree-drape.png',      ratio:'sq',   handle:'proma.styles',     caption:'Gold zari, Puja ready 💛' },
-  { img:'images/indigo-lotus-pallu.jpg',    ratio:'tall', handle:'farhana.wraps',    caption:'Lotus pallu, full drape 🌸' },
-  { img:'images/green-kota-butterfly.jpg',  ratio:'sq',   handle:'tahmina.threads',  caption:'Kota applique detail' },
-  { img:'images/royal-blue-dabu.jpg',       ratio:'sq',   handle:'nabila.k',         caption:'Dabu blues 💙' },
-  { img:'images/ivory-floral-chanderi.jpg', ratio:'tall', handle:'sumaya.drapes',    caption:'Chanderi, Puja night ✨' }
-];
-
+/* `igPosts` array lives in products.js — shared with admin.js so the
+   community wall is editable from Settings. */
 document.getElementById('igGrid').innerHTML = igPosts.map(p => `
   <a class="ig-item ig-${p.ratio}" href="https://www.instagram.com/${p.handle}/" target="_blank" rel="noopener" aria-label="@${p.handle} on Instagram">
-    <img src="${p.img}" alt="${p.caption}" loading="lazy">
+    <img src="${imgSrc(p.img)}" alt="${p.caption}" loading="lazy">
   </a>
 `).join('');
 
