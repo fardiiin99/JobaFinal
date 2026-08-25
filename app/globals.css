@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────
+   House of Joba — design tokens
+   Ported verbatim from the legacy storefront's styles.css so
+   the rebuild is pixel-identical. Tailwind v4 reads @theme and
+   generates the utilities (bg-hibiscus, text-ink-soft, …).
+   ───────────────────────────────────────────────────────── */
+@theme {
+  /* Palette. Percentages are the intended usage split. */
+  --color-ink: #0a0a0a; /* Elegant Black — text / headings */
+  --color-ink-soft: #6e685e; /* Warm Grey — secondary text */
+  --color-cream: #fffdf7; /* Soft Cream — page background (60%) */
+  --color-beige: #e7dfcf; /* Soft Beige — surfaces / cards (20%) */
+  --color-line: #e2d8c6; /* borders, derived from beige */
+  --color-hibiscus: #e44c6b; /* Hibiscus Pink — primary / CTA (7%) */
+  --color-maroon: #c93f5b; /* Deep Hibiscus — dark brand sections */
+  --color-olive: #5d664b; /* Olive Green — accent / highlights (3%) */
+  --color-blush: #f8e1e6;
+  --color-ivory: #f8f4e8;
+
+  --font-serif: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-outfit), system-ui, -apple-system, sans-serif;
+
+  --radius-joba: 14px;
+  --radius-joba-lg: 22px;
+
+  --shadow-joba:
+    0 2px 4px rgb(26 19 21 / 0.04), 0 12px 32px rgb(26 19 21 / 0.07);
+
+  --ease-joba: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* Content column: .wrap was max-width 1240px with 24px gutters */
+  --container-wrap: 1240px;
+
+  /* Announcement marquee: the track holds two copies of the message
+     run, so translating -50% loops seamlessly. */
+  --animate-marquee: marquee 34s linear infinite;
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Logo mark bloom, from the legacy .logo-mark rule. */
+  --animate-bloom: bloom 9s var(--ease-joba) infinite;
+  @keyframes bloom {
+    0%,
+    100% {
+      transform: rotate(0);
+    }
+    50% {
+      transform: rotate(45deg) scale(1.06);
+    }
+  }
+}
+
+/* Respect a reduced-motion preference — the marquee is decorative. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-bloom {
+    animation: none;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Legacy markup relied on a bare <a> inheriting colour. */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The legacy sheet styled every inline SVG as a 20px stroked icon.
+   Components opt in with `.icon` rather than a global svg selector,
+   so next/image and decorative SVGs are unaffected. */
+.icon {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

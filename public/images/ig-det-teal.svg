@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="480" viewBox="0 0 480 480" role="img">
+  <defs>
+    <pattern id="w" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(15)"><path d="M0 6H12M6 0V12" stroke="#c9a227" stroke-opacity="0.14" stroke-width="1"/></pattern>
+    <pattern id="b" width="52" height="52" patternUnits="userSpaceOnUse"><path d="M26 16 l8 10 -8 10 -8 -10Z" fill="#c9a227" fill-opacity="0.4"/></pattern>
+    <linearGradient id="fold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0.10"/><stop offset="0.5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.16"/></linearGradient>
+    <radialGradient id="vig" cx="0.5" cy="0.45" r="0.85"><stop offset="0.6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.20"/></radialGradient>
+  </defs>
+  <rect width="480" height="480" fill="#124a3f"/>
+  <rect x="-30" y="-30" width="560" height="560" fill="#1f7a68" transform="rotate(-4 240 240)"/>
+  <rect x="-30" y="-30" width="560" height="560" fill="url(#w)" transform="rotate(-4 240 240)"/>
+  <rect x="-30" y="-30" width="560" height="560" fill="url(#b)" transform="rotate(-4 240 240)"/>
+  <g transform="rotate(-4 240 240)">
+    <rect x="-30" y="360" width="560" height="60" fill="#e9dcae"/>
+    <path d="M-30 360 h560 M-30 420 h560" stroke="#c9a227" stroke-opacity="0.55" stroke-width="2"/>
+    <g fill="#c9a227" fill-opacity="0.6"><path d="M-10 390 l9 -11 9 11 -9 11Z"/><path d="M36 390 l9 -11 9 11 -9 11Z"/><path d="M82 390 l9 -11 9 11 -9 11Z"/><path d="M128 390 l9 -11 9 11 -9 11Z"/><path d="M174 390 l9 -11 9 11 -9 11Z"/><path d="M220 390 l9 -11 9 11 -9 11Z"/><path d="M266 390 l9 -11 9 11 -9 11Z"/><path d="M312 390 l9 -11 9 11 -9 11Z"/><path d="M358 390 l9 -11 9 11 -9 11Z"/><path d="M404 390 l9 -11 9 11 -9 11Z"/><path d="M450 390 l9 -11 9 11 -9 11Z"/><path d="M496 390 l9 -11 9 11 -9 11Z"/></g>
+  </g>
+  <rect width="480" height="480" fill="url(#fold)"/><rect width="480" height="480" fill="url(#vig)"/>
+</svg>
