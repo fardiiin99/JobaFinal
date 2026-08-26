@@ -1,16 +1,21 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "@/lib/cart-context";
+import { trackMetaEvent } from "@/lib/meta-events";
 
 const MAX = 20;
 
 export function PdpBuyBox({
   productId,
+  productName,
+  price,
   stock,
 }: {
   productId: string;
+  productName: string;
+  price: number;
   stock: number;
 }) {
   const { add } = useCart();
@@ -20,6 +25,31 @@ export function PdpBuyBox({
 
   const cap = Math.max(1, Math.min(MAX, stock));
   const soldOut = stock <= 0;
+
+  /* ViewContent fires once per product page. */
+  useEffect(() => {
+    trackMetaEvent("ViewContent", {
+      customData: {
+        content_ids: [productId],
+        content_name: productName,
+        content_type: "product",
+        value: price,
+        currency: "BDT",
+      },
+    });
+  }, [productId, productName, price]);
+
+  const fireAddToCart = (quantity: number) =>
+    trackMetaEvent("AddToCart", {
+      customData: {
+        content_ids: [productId],
+        content_name: productName,
+        content_type: "product",
+        value: price * quantity,
+        currency: "BDT",
+        num_items: quantity,
+      },
+    });
 
   if (soldOut) {
     return (
@@ -62,6 +92,7 @@ export function PdpBuyBox({
           type="button"
           onClick={() => {
             add(productId, qty);
+            fireAddToCart(qty);
             setAdded(true);
             setTimeout(() => setAdded(false), 1400);
           }}
@@ -78,6 +109,7 @@ export function PdpBuyBox({
         type="button"
         onClick={() => {
           add(productId, qty);
+          fireAddToCart(qty);
           router.push("/checkout");
         }}
         className="mt-3 w-full rounded-full border border-ink bg-white px-8 py-3.5 font-semibold transition-colors duration-300 ease-joba hover:bg-ink hover:text-white"

@@ -149,7 +149,12 @@ export default async function ProductPage({ params }: { params: Params }) {
             {product.blurb}
           </p>
 
-          <PdpBuyBox productId={product.id} stock={product.stock} />
+          <PdpBuyBox
+            productId={product.id}
+            productName={product.name}
+            price={product.price}
+            stock={product.stock}
+          />
 
           <ul className="mt-8 space-y-2 border-t border-line pt-6 text-[14px] text-ink-soft">
             <li>Free delivery over the store threshold · ships in 2–4 days</li>

@@ -1,6 +1,7 @@
 import { AnnouncementBar } from "@/components/store/AnnouncementBar";
 import { Header } from "@/components/store/Header";
 import { Footer } from "@/components/store/Footer";
+import { MetaPixel } from "@/components/store/MetaPixel";
 import { CartProvider } from "@/lib/cart-context";
 import { getCategories, getSettings } from "@/lib/queries";
 
@@ -33,6 +34,10 @@ export default async function StoreLayout({
 
   return (
     <CartProvider>
+      <MetaPixel
+        pixelId={settings.metaPixelId}
+        pageViewEnabled={settings.metaEvents.PageView !== false}
+      />
       <AnnouncementBar threshold={settings.freeShippingThreshold} />
       <Header />
       {children}

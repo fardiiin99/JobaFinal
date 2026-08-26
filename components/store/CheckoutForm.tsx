@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { placeOrder, type PlacedOrder } from "@/app/(store)/checkout/actions";
 import { useCart } from "@/lib/cart-context";
+import { trackMetaEvent } from "@/lib/meta-events";
 import { orderTotals, taka } from "@/lib/money";
 import type { Product, StoreSettings } from "@/lib/types";
 
@@ -30,6 +31,24 @@ export function CheckoutForm({ products, settings }: Props) {
   useEffect(() => {
     if (ready && !placed) reconcile(products.map((p) => p.id));
   }, [ready, products, reconcile, placed]);
+
+  /* InitiateCheckout, once, as soon as there is a real basket. */
+  const checkoutTracked = useRef(false);
+  useEffect(() => {
+    if (!ready || placed || checkoutTracked.current) return;
+    const items = Object.entries(cart);
+    if (items.length === 0) return;
+
+    checkoutTracked.current = true;
+    trackMetaEvent("InitiateCheckout", {
+      customData: {
+        content_ids: items.map(([id]) => id),
+        content_type: "product",
+        num_items: items.reduce((sum, [, q]) => sum + q, 0),
+        currency: "BDT",
+      },
+    });
+  }, [ready, placed, cart]);
 
   const lines = useMemo(
     () =>
@@ -160,6 +179,23 @@ export function CheckoutForm({ products, settings }: Props) {
         setPlacedLines(snapshot);
         setPlaced(result.order);
         clear();
+
+        /* Purchase reports the server-computed total, and passes the
+           customer's email and phone so Meta can attribute the sale.
+           Both are SHA-256 hashed inside the API route — they are
+           never handed to the browser pixel. */
+        trackMetaEvent("Purchase", {
+          email: String(formData.get("email") ?? "").trim() || undefined,
+          phone: String(formData.get("phone") ?? "").trim() || undefined,
+          customData: {
+            content_ids: snapshot.map((l) => l.name),
+            content_type: "product",
+            num_items: snapshot.reduce((sum, l) => sum + l.quantity, 0),
+            value: result.order.total,
+            currency: "BDT",
+            order_id: result.order.orderNumber,
+          },
+        });
       } else {
         setError(result.error);
       }
