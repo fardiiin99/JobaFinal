@@ -53,6 +53,19 @@
       transform: rotate(45deg) scale(1.06);
     }
   }
+
+  /* Petal pulse for HibiscusLoader (components/ui/HibiscusLoader.tsx). */
+  @keyframes petal {
+    0%,
+    100% {
+      opacity: 0.45;
+      transform: rotate(var(--petal-angle, 0deg)) translateY(-2px) scale(0.75);
+    }
+    50% {
+      opacity: 1;
+      transform: rotate(var(--petal-angle, 0deg)) translateY(-2px) scale(1);
+    }
+  }
 }
 
 /* Respect a reduced-motion preference — the marquee is decorative. */
