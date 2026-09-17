@@ -1,0 +1,12 @@
+node_modules
+.next
+.git
+.claude
+.vercel
+.env*
+!.env.example
+npm-debug.log*
+# Legacy static site and tooling, not part of the app build
+src
+supabase
+scripts
