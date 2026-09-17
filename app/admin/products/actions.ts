@@ -7,8 +7,7 @@ export type ActionResult =
   | { ok: true; id?: string }
   | { ok: false; error: string };
 
-const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"];
+const MAX_PHOTOS = 12;
 
 function slugify(value: string): string {
   return value
@@ -21,38 +20,26 @@ function slugify(value: string): string {
 }
 
 /**
- * Push an uploaded photo into Storage and return its public URL.
- *
- * The legacy admin base64-encoded images into localStorage, a ~5 MB
- * quota shared with everything else. save() had no try/catch, so a
- * real photo threw QuotaExceededError straight out of the click
- * handler — no error, no toast, the button simply appeared dead.
+ * Photos are uploaded from the browser straight to Storage, so only
+ * URLs arrive here. Accept this project's media bucket and the bundled
+ * seed images — nothing else ends up rendered on the storefront.
  */
-async function uploadImage(
-  file: File,
-): Promise<{ ok: true; url: string } | { ok: false; error: string }> {
-  if (!ALLOWED_TYPES.includes(file.type)) {
-    return { ok: false, error: `Unsupported image type: ${file.type}` };
+function parsePhotos(raw: FormDataEntryValue | null): string[] | null {
+  let list: unknown;
+  try {
+    list = JSON.parse(String(raw ?? "[]"));
+  } catch {
+    return null;
   }
-  if (file.size > MAX_UPLOAD_BYTES) {
-    return {
-      ok: false,
-      error: `Image is ${(file.size / 1024 / 1024).toFixed(1)} MB — the limit is 8 MB.`,
-    };
-  }
+  if (!Array.isArray(list) || list.length > MAX_PHOTOS) return null;
 
-  const supabase = await createClient();
-  const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
-  const path = `products/${crypto.randomUUID()}.${ext}`;
-
-  const { error } = await supabase.storage
-    .from("media")
-    .upload(path, file, { contentType: file.type, upsert: false });
-
-  if (error) return { ok: false, error: `Upload failed: ${error.message}` };
-
-  const { data } = supabase.storage.from("media").getPublicUrl(path);
-  return { ok: true, url: data.publicUrl };
+  const bucket = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/media/`;
+  const valid = list.every(
+    (u) =>
+      typeof u === "string" &&
+      (u.startsWith(bucket) || /^\/images\/[\w.-]+$/.test(u)),
+  );
+  return valid ? [...new Set(list as string[])] : null;
 }
 
 /** Refresh every surface a product edit can affect. */
@@ -101,12 +88,12 @@ export async function saveProduct(formData: FormData): Promise<ActionResult> {
     active: formData.get("active") === "on",
   };
 
-  const file = formData.get("image");
-  if (file instanceof File && file.size > 0) {
-    const uploaded = await uploadImage(file);
-    if (!uploaded.ok) return uploaded;
-    row.image_url = uploaded.url;
+  const photos = parsePhotos(formData.get("photos"));
+  if (!photos) {
+    return { ok: false, error: `Photos are invalid — up to ${MAX_PHOTOS} allowed.` };
   }
+  row.image_url = photos[0] ?? null;
+  row.gallery_urls = photos.slice(1);
 
   if (id) {
     const { error } = await supabase.from("products").update(row).eq("id", id);
@@ -130,18 +117,39 @@ export async function saveProduct(formData: FormData): Promise<ActionResult> {
   return { ok: true, id: data.id as string };
 }
 
+/**
+ * Permanently remove a product and its uploaded photos.
+ *
+ * Past orders survive: order_items keeps its own name/price snapshot and
+ * product_id is ON DELETE SET NULL. To hide a product temporarily, untick
+ * "Visible in the shop" instead.
+ */
 export async function deleteProduct(id: string): Promise<ActionResult> {
   const supabase = await createClient();
 
-  /* Archive rather than delete. order_items keeps a name and price
-     snapshot, but removing the row would still strip the link from
-     historical orders — and stock/sales history with it. */
-  const { error } = await supabase
+  const { data: product, error: readError } = await supabase
     .from("products")
-    .update({ active: false })
-    .eq("id", id);
+    .select("image_url, gallery_urls")
+    .eq("id", id)
+    .maybeSingle();
 
+  if (readError) return { ok: false, error: readError.message };
+  if (!product) return { ok: false, error: "That product no longer exists." };
+
+  const { error } = await supabase.from("products").delete().eq("id", id);
   if (error) return { ok: false, error: error.message };
+
+  // Only files in our bucket; bundled /images/ seed photos are left alone.
+  const bucket = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/media/`;
+  const paths = [product.image_url, ...(product.gallery_urls ?? [])]
+    .filter((u): u is string => typeof u === "string" && u.startsWith(bucket))
+    .map((u) => u.slice(bucket.length));
+
+  if (paths.length > 0) {
+    // Best effort: the product is already gone, an orphaned file is harmless.
+    await supabase.storage.from("media").remove(paths);
+  }
+
   revalidateStorefront();
   return { ok: true };
 }

@@ -69,7 +69,7 @@ export default async function ShopPage({
           className={`rounded-full border px-4 py-2 text-[13px] font-medium transition-colors ${
             weave
               ? "border-line bg-white hover:bg-ivory"
-              : "border-ink bg-ink text-white"
+              : "border-hibiscus bg-blush text-hibiscus"
           }`}
         >
           All weaves
@@ -80,7 +80,7 @@ export default async function ShopPage({
             href={href({ weave: c.slug })}
             className={`rounded-full border px-4 py-2 text-[13px] font-medium transition-colors ${
               weave === c.slug
-                ? "border-ink bg-ink text-white"
+                ? "border-hibiscus bg-blush text-hibiscus"
                 : "border-line bg-white hover:bg-ivory"
             }`}
           >

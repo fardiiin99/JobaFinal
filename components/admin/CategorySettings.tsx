@@ -18,37 +18,56 @@ const label = "block text-[12.5px] font-semibold text-ink-soft";
 
 function DeleteButton({
   category,
+  others,
   onDone,
   onError,
 }: {
   category: Category;
+  others: Category[];
   onDone: () => void;
   onError: (message: string) => void;
 }) {
   const [pending, startTransition] = useTransition();
   const [confirming, setConfirming] = useState(false);
+  const [moveTo, setMoveTo] = useState(others[0]?.id ?? "");
 
   if (!confirming) {
     return (
       <button
         type="button"
         onClick={() => setConfirming(true)}
-        className="text-[13px] text-ink-soft underline underline-offset-4 hover:text-maroon"
+        className="rounded-full border border-maroon px-4 py-1.5 text-[13px] font-semibold text-maroon transition-colors hover:bg-blush"
       >
-        Delete
+        Remove
       </button>
     );
   }
 
   return (
-    <span className="flex items-center gap-2 text-[13px]">
-      <span className="text-maroon">Delete “{category.name}”?</span>
+    <span className="flex w-full flex-wrap items-center gap-2.5 rounded-joba border border-hibiscus bg-blush px-3.5 py-2.5 text-[13px]">
+      <span className="text-maroon">Remove “{category.name}”?</span>
+      {others.length > 0 && (
+        <label className="flex items-center gap-1.5 text-ink-soft">
+          Move its products to
+          <select
+            value={moveTo}
+            onChange={(e) => setMoveTo(e.target.value)}
+            className="rounded-full border border-line bg-white px-2.5 py-1 text-[13px] text-ink outline-none focus:border-hibiscus"
+          >
+            {others.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
       <button
         type="button"
         disabled={pending}
         onClick={() =>
           startTransition(async () => {
-            const result = await deleteCategory(category.id);
+            const result = await deleteCategory(category.id, moveTo || undefined);
             if (result.ok) onDone();
             else {
               onError(result.error);
@@ -56,16 +75,17 @@ function DeleteButton({
             }
           })
         }
-        className="font-semibold text-maroon underline underline-offset-4 disabled:opacity-60"
+        className="rounded-full bg-maroon px-3.5 py-1 font-semibold text-white hover:bg-hibiscus disabled:opacity-60"
       >
-        {pending ? "Deleting…" : "Yes, delete"}
+        {pending ? "Removing…" : "Yes, remove"}
       </button>
       <button
         type="button"
+        disabled={pending}
         onClick={() => setConfirming(false)}
         className="text-ink-soft underline underline-offset-4"
       >
-        Keep
+        Cancel
       </button>
     </span>
   );
@@ -73,9 +93,11 @@ function DeleteButton({
 
 function CategoryRow({
   category,
+  others = [],
   onDone,
 }: {
   category?: Category;
+  others?: Category[];
   onDone: () => void;
 }) {
   const [pending, startTransition] = useTransition();
@@ -219,6 +241,7 @@ function CategoryRow({
             {category ? (
               <DeleteButton
                 category={category}
+                others={others}
                 onDone={onDone}
                 onError={setError}
               />
@@ -255,7 +278,12 @@ export function CategorySettings({ categories }: { categories: Category[] }) {
   return (
     <div className="space-y-4">
       {categories.map((category) => (
-        <CategoryRow key={category.id} category={category} onDone={done} />
+        <CategoryRow
+          key={category.id}
+          category={category}
+          others={categories.filter((c) => c.id !== category.id)}
+          onDone={done}
+        />
       ))}
 
       {adding ? (

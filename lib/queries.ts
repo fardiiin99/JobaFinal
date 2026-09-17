@@ -15,7 +15,7 @@ import type {
 
 const PRODUCT_COLUMNS = `
   id, slug, name, category_id, price, compare_at_price, image_url,
-  image_position, gallery_positions, blurb, specs, rating, review_count,
+  image_position, gallery_positions, gallery_urls, blurb, specs, rating, review_count,
   sold_count, stock, tag, active, sort_order,
   categories!inner ( name, slug )
 `;
@@ -38,6 +38,7 @@ function toProduct(row: RawProduct): Product {
     imageUrl: (row.image_url as string) ?? null,
     imagePosition: (row.image_position as string) ?? "50% 50%",
     galleryPositions: (row.gallery_positions as string[]) ?? [],
+    galleryUrls: (row.gallery_urls as string[]) ?? [],
     blurb: (row.blurb as string) ?? "",
     specs: (row.specs as [string, string][]) ?? [],
     rating: row.rating == null ? null : num(row.rating),

@@ -64,12 +64,12 @@ export function AdminNav() {
                 href={item.href}
                 aria-current={pathname === item.href ? "page" : undefined}
                 className={`flex items-center gap-2.5 rounded-joba px-3.5 py-2.5 text-[14px] font-medium transition-colors ${
-                  active ? "bg-ink text-white" : "text-ink hover:bg-white"
+                  active ? "font-semibold text-hibiscus" : "text-ink hover:text-hibiscus"
                 }`}
               >
                 <span
                   className={`text-[12px] tabular-nums ${
-                    active ? "text-white/50" : "text-ink-soft"
+                    active ? "text-hibiscus/60" : "text-ink-soft"
                   }`}
                 >
                   {i + 1}

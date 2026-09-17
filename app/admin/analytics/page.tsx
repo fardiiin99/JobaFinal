@@ -108,7 +108,7 @@ export default async function AnalyticsPage({
               href={`/admin/analytics?days=${range}`}
               className={`rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
                 days === range
-                  ? "border-ink bg-ink text-white"
+                  ? "border-hibiscus bg-blush text-hibiscus"
                   : "border-line bg-white hover:bg-ivory"
               }`}
             >

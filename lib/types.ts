@@ -42,6 +42,8 @@ export interface Product {
   imagePosition: string;
   /** object-position values used to fake a gallery from one photo. */
   galleryPositions: string[];
+  /** Extra photos after imageUrl, in display order. */
+  galleryUrls: string[];
   blurb: string;
   specs: [string, string][];
   rating: number | null;

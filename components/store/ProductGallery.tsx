@@ -4,22 +4,36 @@ import Image from "next/image";
 import { useState } from "react";
 import type { Product } from "@/lib/types";
 
+type Slide = { src: string; position: string };
+
 /**
- * Single photo shown at several crops to imply a gallery, plus a
- * cursor-tracking zoom — the same trick the legacy PDP used.
+ * Real extra photos when the product has them; otherwise the seeded
+ * single photo shown at several crops. Cursor-tracking zoom on both.
  */
-export function ProductGallery({ product }: { product: Product }) {
+function slidesFor(product: Product): Slide[] {
+  if (!product.imageUrl) return [];
+  if (product.galleryUrls.length > 0) {
+    return [
+      { src: product.imageUrl, position: product.imagePosition },
+      ...product.galleryUrls.map((src) => ({ src, position: "50% 50%" })),
+    ];
+  }
   const crops =
     product.galleryPositions.length > 0
       ? product.galleryPositions
       : [product.imagePosition];
+  return crops.map((position) => ({ src: product.imageUrl!, position }));
+}
+
+export function ProductGallery({ product }: { product: Product }) {
+  const slides = slidesFor(product);
 
   const [active, setActive] = useState(0);
   const [zoom, setZoom] = useState(false);
   const [origin, setOrigin] = useState("center");
 
-  if (!product.imageUrl) return null;
-  const src = product.imageUrl;
+  if (slides.length === 0) return null;
+  const current = slides[Math.min(active, slides.length - 1)];
 
   return (
     <div>
@@ -38,13 +52,14 @@ export function ProductGallery({ product }: { product: Product }) {
         }}
       >
         <Image
-          src={src}
+          key={current.src}
+          src={current.src}
           alt={`${product.name} — ${product.categoryName} saree`}
           fill
           sizes="(max-width: 1024px) 100vw, 50vw"
           priority
           style={{
-            objectPosition: crops[active],
+            objectPosition: current.position,
             transformOrigin: origin,
             transform: zoom ? "scale(1.6)" : "scale(1)",
           }}
@@ -63,11 +78,11 @@ export function ProductGallery({ product }: { product: Product }) {
         )}
       </div>
 
-      {crops.length > 1 && (
-        <div className="mt-3 flex gap-3">
-          {crops.map((crop, i) => (
+      {slides.length > 1 && (
+        <div className="mt-3 flex flex-wrap gap-3">
+          {slides.map((slide, i) => (
             <button
-              key={crop}
+              key={`${slide.src}-${slide.position}`}
               type="button"
               aria-label={`View ${i + 1}`}
               aria-current={i === active}
@@ -77,11 +92,11 @@ export function ProductGallery({ product }: { product: Product }) {
               }`}
             >
               <Image
-                src={src}
+                src={slide.src}
                 alt=""
                 fill
                 sizes="80px"
-                style={{ objectPosition: crop }}
+                style={{ objectPosition: slide.position }}
                 className="object-cover"
               />
             </button>

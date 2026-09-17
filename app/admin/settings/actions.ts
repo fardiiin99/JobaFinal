@@ -97,13 +97,15 @@ export async function saveCategory(formData: FormData): Promise<ActionResult> {
 }
 
 /**
- * Remove a category.
+ * Remove a category, first moving its products to `moveToId`.
  *
- * products.category_id is ON DELETE RESTRICT, so Postgres would refuse
- * anyway — but a foreign-key error is not a useful thing to show
- * someone, so check first and say what to do about it.
+ * products.category_id is ON DELETE RESTRICT, so products are never
+ * deleted along with their category — they must be moved somewhere.
  */
-export async function deleteCategory(id: string): Promise<ActionResult> {
+export async function deleteCategory(
+  id: string,
+  moveToId?: string,
+): Promise<ActionResult> {
   const supabase = await createClient();
 
   const { count, error: countError } = await supabase
@@ -114,10 +116,17 @@ export async function deleteCategory(id: string): Promise<ActionResult> {
   if (countError) return { ok: false, error: countError.message };
 
   if ((count ?? 0) > 0) {
-    return {
-      ok: false,
-      error: `${count} product${count === 1 ? "" : "s"} still use this weave. Move them to another category first.`,
-    };
+    if (!moveToId || moveToId === id) {
+      return {
+        ok: false,
+        error: `${count} product${count === 1 ? "" : "s"} use this category. Choose where to move them.`,
+      };
+    }
+    const { error: moveError } = await supabase
+      .from("products")
+      .update({ category_id: moveToId })
+      .eq("category_id", id);
+    if (moveError) return { ok: false, error: moveError.message };
   }
 
   const { error } = await supabase.from("categories").delete().eq("id", id);

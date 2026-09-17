@@ -62,7 +62,9 @@ export default async function ProductPage({ params }: { params: Params }) {
     "@type": "Product",
     name: product.name,
     description: product.blurb,
-    image: product.imageUrl ? [product.imageUrl] : undefined,
+    image: product.imageUrl
+      ? [product.imageUrl, ...product.galleryUrls]
+      : undefined,
     category: product.categoryName,
     ...(product.rating != null && product.reviewCount > 0
       ? {

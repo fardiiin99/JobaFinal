@@ -10,30 +10,33 @@ import type { Bucket } from "@/lib/analytics";
 export function BarChart({ data }: { data: Bucket[] }) {
   const max = Math.max(...data.map((d) => d.revenue), 1);
   const hasSales = data.some((d) => d.revenue > 0);
+  const labelEvery = Math.ceil(data.length / 8);
 
   return (
     <figure>
       <div
-        className="flex h-56 items-end gap-1.5"
+        className="flex h-56 gap-1.5"
         role="img"
         aria-label={`Revenue for the last ${data.length} days`}
       >
-        {data.map((bucket) => (
+        {data.map((bucket, i) => (
           <div
             key={bucket.label}
-            className="flex min-w-0 flex-1 flex-col items-center gap-1.5"
+            className="flex min-w-0 flex-1 flex-col gap-1.5"
             title={`${bucket.label}: ${taka(bucket.revenue)} from ${bucket.orders} order${bucket.orders === 1 ? "" : "s"}`}
           >
-            <div className="flex w-full flex-1 items-end">
+            {/* Absolute bar: a % height needs a definite parent height,
+                which a flex-grown box doesn't provide. */}
+            <div className="relative w-full flex-1 rounded-t-sm bg-ivory">
               <div
-                className="w-full rounded-t-sm bg-hibiscus transition-[height]"
+                className="absolute inset-x-0 bottom-0 rounded-t-sm bg-hibiscus transition-[height]"
                 style={{
                   height: `${Math.max((bucket.revenue / max) * 100, bucket.revenue > 0 ? 2 : 0)}%`,
                 }}
               />
             </div>
-            <span className="w-full truncate text-center text-[10px] text-ink-soft">
-              {bucket.label}
+            <span className="h-3.5 whitespace-nowrap text-center text-[10px] leading-none text-ink-soft">
+              {i % labelEvery === 0 ? bucket.label : ""}
             </span>
           </div>
         ))}

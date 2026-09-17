@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { RemoveProductButton } from "@/components/admin/RemoveProductButton";
 import { getAdminProducts } from "@/lib/admin-queries";
 import { taka } from "@/lib/money";
 
@@ -34,7 +35,7 @@ export default async function AdminProductsPage({
   const chip = (active: boolean) =>
     `rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
       active
-        ? "border-ink bg-ink text-white"
+        ? "border-hibiscus bg-blush text-hibiscus"
         : "border-line bg-white hover:bg-ivory"
     }`;
 
@@ -156,12 +157,15 @@ export default async function AdminProductsPage({
                   </td>
 
                   <td className="px-4 py-3 text-right">
-                    <Link
-                      href={`/admin/products/${p.id}`}
-                      className="text-[13px] font-semibold text-hibiscus underline underline-offset-4"
-                    >
-                      Edit
-                    </Link>
+                    <div className="flex items-start justify-end gap-4">
+                      <Link
+                        href={`/admin/products/${p.id}`}
+                        className="text-[13px] font-semibold text-hibiscus underline underline-offset-4"
+                      >
+                        Edit
+                      </Link>
+                      <RemoveProductButton id={p.id} name={p.name} />
+                    </div>
                   </td>
                 </tr>
               );
