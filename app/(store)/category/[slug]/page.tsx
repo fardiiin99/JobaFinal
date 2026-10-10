@@ -26,7 +26,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const category = await getCategoryBySlug(slug);
-  if (!category) return { title: "Not found" };
+  /* See the note on the product page: notFound() under ISR still
+     responds 200, so noindex is what keeps these out of the index. */
+  if (!category)
+    return { title: "Not found", robots: { index: false, follow: false } };
 
   const title = `${category.name} Sarees`;
   return {

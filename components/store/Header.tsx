@@ -87,9 +87,13 @@ export function Header() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
+          {/* A magnifier that goes to the listing, not a search box — there
+              is no search on the site yet. Labelled for what it does so
+              screen readers aren't promised a search field that never
+              appears. */}
           <Link
             href="/shop"
-            aria-label="Search"
+            aria-label="Browse all sarees"
             className="grid size-10 place-items-center rounded-full text-ink hover:bg-ivory"
           >
             <svg viewBox="0 0 24 24" className="icon">

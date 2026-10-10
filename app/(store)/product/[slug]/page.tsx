@@ -28,7 +28,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
-  if (!product) return { title: "Not found" };
+  /* An unknown slug still renders with a 200: notFound() inside an
+     ISR-cached dynamic segment gets generated and cached as a success.
+     Until that changes, noindex is what actually stops search engines
+     indexing unlimited junk URLs as real product pages. */
+  if (!product)
+    return { title: "Not found", robots: { index: false, follow: false } };
 
   const title = `${product.name} — ${product.categoryName} Saree`;
   return {
