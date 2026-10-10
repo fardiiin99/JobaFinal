@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumb } from "@/components/store/Breadcrumb";
 import { ProductGrid } from "@/components/store/ProductGrid";
-import { getCategories, getProducts } from "@/lib/queries";
+import { getStoreCategories, getProducts } from "@/lib/queries";
 
 export const metadata: Metadata = {
   title: "Shop All",
@@ -28,7 +28,7 @@ export default async function ShopPage({
   searchParams: SearchParams;
 }) {
   const { weave, sort } = await searchParams;
-  const [all, categories] = await Promise.all([getProducts(), getCategories()]);
+  const [all, categories] = await Promise.all([getProducts(), getStoreCategories()]);
 
   let products = weave ? all.filter((p) => p.categorySlug === weave) : all;
 

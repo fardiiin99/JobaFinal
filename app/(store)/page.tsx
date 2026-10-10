@@ -7,7 +7,7 @@ import { ProductRail } from "@/components/store/ProductRail";
 import { Reviews } from "@/components/store/Reviews";
 import {
   getBestSellers,
-  getCategories,
+  getStoreCategories,
   getCommunityPosts,
   getHeroSlides,
   getNewArrivals,
@@ -45,7 +45,7 @@ export default async function HomePage() {
   const [hero, categories, newArrivals, bestSellers, reviews, community] =
     await Promise.all([
       getHeroSlides(),
-      getCategories(),
+      getStoreCategories(),
       getNewArrivals(),
       getBestSellers(),
       getReviews(),

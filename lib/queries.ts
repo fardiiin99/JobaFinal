@@ -130,6 +130,17 @@ export async function getCategories(): Promise<Category[]> {
   }));
 }
 
+/**
+ * Categories shoppers can actually browse. The count already respects
+ * RLS, so a collection holding only drafts reads as empty here and
+ * stays off the homepage, shop filters, footer and sitemap until one
+ * of its pieces goes live. The admin keeps using getCategories().
+ */
+export async function getStoreCategories(): Promise<Category[]> {
+  const all = await getCategories();
+  return all.filter((c) => (c.productCount ?? 0) > 0);
+}
+
 export async function getCategoryBySlug(
   slug: string,
 ): Promise<Category | null> {

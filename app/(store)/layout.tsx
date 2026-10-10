@@ -3,7 +3,7 @@ import { Header } from "@/components/store/Header";
 import { Footer } from "@/components/store/Footer";
 import { MetaPixel } from "@/components/store/MetaPixel";
 import { CartProvider } from "@/lib/cart-context";
-import { getCategories, getSettings } from "@/lib/queries";
+import { getStoreCategories, getSettings } from "@/lib/queries";
 
 /**
  * Product and category pages prerender at build time, which is fast but
@@ -29,7 +29,7 @@ export default async function StoreLayout({
 }) {
   const [settings, categories] = await Promise.all([
     getSettings(),
-    getCategories(),
+    getStoreCategories(),
   ]);
 
   return (
