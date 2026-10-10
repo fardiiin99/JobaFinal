@@ -63,37 +63,40 @@ export default async function ShopPage({
         {weave ? " in this weave" : " in the collection"}
       </p>
 
-      <div className="mt-7 flex flex-wrap items-center gap-2">
-        <Link
-          href={href({ weave: undefined })}
-          className={`rounded-full border px-4 py-2 text-[13px] font-medium transition-colors ${
-            weave
-              ? "border-line bg-white hover:bg-ivory"
-              : "border-hibiscus bg-blush text-hibiscus"
-          }`}
-        >
-          All weaves
-        </Link>
-        {categories.map((c) => (
+      <div className="mt-7 flex flex-col gap-2 lg:flex-row lg:items-start lg:gap-4">
+        {/* One swipeable row per group on phones; wraps from lg up. */}
+        <div className="-mx-6 flex gap-2 overflow-x-auto px-6 py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:mx-0 lg:overflow-visible lg:px-0 lg:flex-1 lg:flex-wrap">
           <Link
-            key={c.id}
-            href={href({ weave: c.slug })}
-            className={`rounded-full border px-4 py-2 text-[13px] font-medium transition-colors ${
-              weave === c.slug
-                ? "border-hibiscus bg-blush text-hibiscus"
-                : "border-line bg-white hover:bg-ivory"
+            href={href({ weave: undefined })}
+            className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-[13px] font-medium transition-colors ${
+              weave
+                ? "border-line bg-white hover:bg-ivory"
+                : "border-hibiscus bg-blush text-hibiscus"
             }`}
           >
-            {c.name}
+            All weaves
           </Link>
-        ))}
+          {categories.map((c) => (
+            <Link
+              key={c.id}
+              href={href({ weave: c.slug })}
+              className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-[13px] font-medium transition-colors ${
+                weave === c.slug
+                  ? "border-hibiscus bg-blush text-hibiscus"
+                  : "border-line bg-white hover:bg-ivory"
+              }`}
+            >
+              {c.name}
+            </Link>
+          ))}
+        </div>
 
-        <div className="ml-auto flex flex-wrap items-center gap-2">
+        <div className="-mx-6 flex gap-2 overflow-x-auto px-6 py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:mx-0 lg:overflow-visible lg:px-0 lg:shrink-0">
           {(Object.keys(SORTS) as (keyof typeof SORTS)[]).map((key) => (
             <Link
               key={key}
               href={href({ sort: key === "featured" ? undefined : key })}
-              className={`rounded-full border px-3.5 py-2 text-[12.5px] transition-colors ${
+              className={`shrink-0 whitespace-nowrap rounded-full border px-3.5 py-2 text-[12.5px] transition-colors ${
                 activeSort === key
                   ? "border-hibiscus text-hibiscus"
                   : "border-line bg-white hover:bg-ivory"

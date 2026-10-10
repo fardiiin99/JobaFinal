@@ -73,16 +73,16 @@ export function ProductCard({ product, mode = "new", rank, priority }: Props) {
         <AddToBagButton
           productId={product.id}
           inStock={!soldOut}
-          className="absolute inset-x-3 bottom-3 z-2 translate-y-3 rounded-full bg-ink p-2.5 text-[13px] font-semibold text-white opacity-0 transition-[opacity,transform] duration-300 ease-joba focus-visible:translate-y-0 focus-visible:opacity-100 group-hover:translate-y-0 group-hover:opacity-100"
+          className="pointer-events-none absolute inset-x-3 bottom-3 z-2 translate-y-3 rounded-full bg-ink p-2.5 text-[13px] font-semibold text-white opacity-0 transition-[opacity,transform] duration-300 ease-joba focus-visible:pointer-events-auto focus-visible:translate-y-0 focus-visible:opacity-100 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100"
         />
       </div>
 
-      <div className="px-4 pb-4 pt-3.5">
+      <div className="px-3 pb-3.5 pt-3 sm:px-4 sm:pb-4 sm:pt-3.5">
         <p className="text-[11px] uppercase tracking-[0.1em] text-ink-soft">
           {product.categoryName}
         </p>
         <Link href={href} className="block">
-          <h3 className="mb-2 mt-1.5 font-serif text-[16.5px] font-semibold transition-colors group-hover:text-hibiscus">
+          <h3 className="mb-2 mt-1.5 font-serif text-[15px] font-semibold leading-snug sm:text-[16.5px] transition-colors group-hover:text-hibiscus">
             {product.name}
           </h3>
         </Link>

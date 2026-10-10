@@ -63,12 +63,15 @@ export function ProductRail({ products, action }: Props) {
         )}
       </div>
 
+      {/* Cards draw a pink outline 6.5px outside themselves and lift 6px
+          on hover; a scroll container clips anything past its padding,
+          so the padding (and snap padding) must cover both. */}
       <div
         ref={ref}
-        className="-mx-2.5 flex snap-x snap-mandatory gap-[18px] overflow-x-auto px-2.5 pb-7 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="-mx-4 flex scroll-px-4 snap-x snap-mandatory gap-[18px] overflow-x-auto px-4 pb-8 pt-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {products.map((product, i) => (
-          <div key={product.id} className="w-[258px] flex-none snap-start">
+          <div key={product.id} className="w-[min(258px,72vw)] flex-none snap-start">
             <ProductCard product={product} priority={i < 2} />
           </div>
         ))}
