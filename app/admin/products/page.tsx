@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/AppImage";
 import Link from "next/link";
 import { RemoveProductButton } from "@/components/admin/RemoveProductButton";
 import { getAdminProducts } from "@/lib/admin-queries";

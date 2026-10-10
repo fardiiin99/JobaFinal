@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Image from "@/components/AppImage";
 import { notFound } from "next/navigation";
 import { Breadcrumb } from "@/components/store/Breadcrumb";
 import { ProductGrid } from "@/components/store/ProductGrid";

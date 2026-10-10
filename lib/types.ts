@@ -57,9 +57,17 @@ export interface Product {
 }
 
 export interface HeroSlide {
+  /** Wide desktop image (designed at 2560×1080). */
   image_url: string;
+  /** Portrait phone image (designed at 1080×1350); falls back to image_url. */
+  mobile_url?: string;
   alt: string;
   position: string;
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  /** Where the whole slide links to, e.g. /category/bonolota. */
+  href?: string;
 }
 
 export interface Review {

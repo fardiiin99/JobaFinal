@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/AppImage";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { saveContent, uploadContentImage } from "@/app/admin/settings/actions";
@@ -214,7 +214,7 @@ export function HomepageSettings({
       {/* ── Hero ─────────────────────────────────────────── */}
       <Section
         title="Hero slider"
-        hint="Full-width photos at the top of the homepage. The first slide loads eagerly; the rest are lazy."
+        hint="Full-width photos at the top of the homepage, with separate desktop and phone images. Each slide can carry a title and link to a collection."
         pending={pending}
         saved={savedKey === "hero"}
         error={errors.hero ?? null}
@@ -229,16 +229,57 @@ export function HomepageSettings({
             key={`hero-${i}`}
             className="flex items-start gap-3 rounded-joba border border-line p-3"
           >
-            <ImagePicker
-              url={slide.image_url}
-              onError={(m) => setError("hero", m)}
-              onUploaded={(url) =>
-                setHero(
-                  hero.map((s, j) => (j === i ? { ...s, image_url: url } : s)),
-                )
-              }
-            />
+            <div className="shrink-0 space-y-1 text-[11px] text-ink-soft">
+              <p>Desktop</p>
+              <ImagePicker
+                url={slide.image_url}
+                className="aspect-64/27 w-20"
+                onError={(m) => setError("hero", m)}
+                onUploaded={(url) =>
+                  setHero(
+                    hero.map((s, j) => (j === i ? { ...s, image_url: url } : s)),
+                  )
+                }
+              />
+              <p className="pt-1">Phone</p>
+              <ImagePicker
+                url={slide.mobile_url ?? ""}
+                className="aspect-4/5 w-20"
+                onError={(m) => setError("hero", m)}
+                onUploaded={(url) =>
+                  setHero(
+                    hero.map((s, j) => (j === i ? { ...s, mobile_url: url } : s)),
+                  )
+                }
+              />
+            </div>
             <div className="flex-1 space-y-2">
+              <p className="text-[12px] text-ink-soft">
+                Desktop photo 2560×1080, phone photo 1080×1350. No phone photo?
+                The desktop one is cropped to fit.
+              </p>
+              {(
+                [
+                  ["eyebrow", "Small line above the title, e.g. New collection"],
+                  ["title", "Title, e.g. Bonolota"],
+                  ["subtitle", "Line under the title"],
+                  ["href", "Link, e.g. /category/bonolota"],
+                ] as const
+              ).map(([key, placeholder]) => (
+                <input
+                  key={key}
+                  value={slide[key] ?? ""}
+                  placeholder={placeholder}
+                  onChange={(e) =>
+                    setHero(
+                      hero.map((s, j) =>
+                        j === i ? { ...s, [key]: e.target.value } : s,
+                      ),
+                    )
+                  }
+                  className={field}
+                />
+              ))}
               <input
                 value={slide.alt}
                 placeholder="Alt text — describes the photo"

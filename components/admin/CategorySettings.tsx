@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/AppImage";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { deleteCategory, saveCategory } from "@/app/admin/settings/actions";

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/AppImage";
 import Link from "next/link";
 import type { Category } from "@/lib/types";
 
@@ -57,10 +57,10 @@ export function CategoryGrid({ categories }: { categories: Category[] }) {
             >
               {category.name}
             </h3>
-            <span className="mt-1 block text-[12.5px] opacity-80">
+            <span className="mt-1 hidden text-[12.5px] opacity-80 sm:line-clamp-2">
               {category.description}
             </span>
-            <span className="mt-2.5 inline-flex -translate-x-1.5 items-center gap-1.5 text-[12.5px] font-semibold opacity-0 transition-[opacity,transform] duration-300 ease-joba group-hover:translate-x-0 group-hover:opacity-100">
+            <span className="mt-2.5 hidden -translate-x-1.5 items-center sm:inline-flex gap-1.5 text-[12.5px] font-semibold opacity-0 transition-[opacity,transform] duration-300 ease-joba group-hover:translate-x-0 group-hover:opacity-100">
               Shop {category.name}
               <svg viewBox="0 0 24 24" className="icon size-[15px]">
                 <path d="M5 12h13M13 6l6 6-6 6" />

@@ -54,6 +54,18 @@
     }
   }
 
+  /* Hero slide timer: the active indicator fills over one interval
+     (components/store/HeroSlider.tsx advances on animationend). */
+  --animate-hero-progress: hero-progress 7s linear forwards;
+  @keyframes hero-progress {
+    from {
+      transform: translateY(-50%) scaleX(0);
+    }
+    to {
+      transform: translateY(-50%) scaleX(1);
+    }
+  }
+
   /* Petal pulse for HibiscusLoader (components/ui/HibiscusLoader.tsx). */
   @keyframes petal {
     0%,
